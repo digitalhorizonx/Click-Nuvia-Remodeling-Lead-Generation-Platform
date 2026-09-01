@@ -1,0 +1,4 @@
+import { z } from "zod";
+export const leadSchema=z.object({projectType:z.string().min(2).max(80),zip:z.string().regex(/^\d{5}$/),timeline:z.string().min(2).max(60),ownership:z.string().min(2).max(40),budget:z.string().min(2).max(40),firstName:z.string().trim().min(1).max(80),lastName:z.string().trim().min(1).max(80),email:z.string().email().max(254),phone:z.string().transform(v=>v.replace(/\D/g,"")).pipe(z.string().min(10).max(15)),consent:z.literal(true),source:z.string().max(100).optional()});
+export type Lead=z.infer<typeof leadSchema>;
+export function scoreLead(l:Lead){let score=20;if(l.ownership==="Yes")score+=25;if(l.timeline==="As soon as possible")score+=25;else if(l.timeline==="1–3 months")score+=15;if(["$75,000–$150,000","$150,000+"].includes(l.budget))score+=25;else if(l.budget==="$30,000–$75,000")score+=15;if(l.projectType==="Whole home"||l.projectType==="Room addition")score+=5;return Math.min(score,100)}

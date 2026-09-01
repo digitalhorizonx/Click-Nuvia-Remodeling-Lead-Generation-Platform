@@ -1,0 +1,2 @@
+import crypto from "node:crypto";
+export async function sendToCrm(payload:unknown){const url=process.env.CRM_WEBHOOK_URL;if(!url)return {status:"skipped" as const};const body=JSON.stringify(payload),secret=process.env.CRM_WEBHOOK_SECRET||"";const signature=crypto.createHmac("sha256",secret).update(body).digest("hex");const r=await fetch(url,{method:"POST",headers:{"content-type":"application/json","x-click-nuvia-signature":signature},body,signal:AbortSignal.timeout(8000)});if(!r.ok)throw new Error(`CRM returned ${r.status}`);return {status:"sent" as const}}

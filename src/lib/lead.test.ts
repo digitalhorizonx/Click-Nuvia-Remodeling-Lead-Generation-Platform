@@ -1,0 +1,3 @@
+import {describe,expect,it} from "vitest";import {leadSchema,scoreLead} from "./lead";
+const lead={projectType:"Whole home",zip:"90210",timeline:"As soon as possible",ownership:"Yes",budget:"$150,000+",firstName:"Ada",lastName:"Lovelace",email:"ada@example.com",phone:"(555) 555-1212",consent:true as const,source:"google"};
+describe("lead qualification",()=>{it("accepts a complete consented US lead",()=>expect(leadSchema.parse(lead).phone).toBe("5555551212"));it("rejects missing consent",()=>expect(leadSchema.safeParse({...lead,consent:false}).success).toBe(false));it("scores high-intent homeowners",()=>expect(scoreLead(leadSchema.parse(lead))).toBe(100))});
